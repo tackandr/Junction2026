@@ -12,14 +12,15 @@
 ## 🎯 1. Define the Challenge
 
 ### Problem Statement
-What problem are we trying to solve?
+The world is facing a new technological revolution around the new AI tools, where LLM and other AI technologies are rapidly changing the way we work, we communicate, we create and we solve problems.
 
-> [Describe the challenge]
+Soon the Robots will be smarter than ever and Physical AI will be running in every small appliance and device.
 
-### Objectives
-- [ ] Objective 1
-- [ ] Objective 2
-- [ ] Objective 3
+It looks like America and Asia are taking the lead on this revolution and big companies from both continents will control, for good and for bad, these AI tools.
+
+They tell you that the future is inevitable, but it is not true. Europe can change that!
+
+Using Edge AI devices like the Arduino UNO Q we can create local solutions to local problems that are not dependant on governments or private companies. Most of these problems will have a huge impact in the environment having the opportunity to create step by step a Greener, high-technological and human Europe: The Green European Renaissance.
 
 ### Key Questions
 - What are we trying to achieve?
