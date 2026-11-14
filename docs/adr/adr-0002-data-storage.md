@@ -72,3 +72,6 @@ The VisioSense application needs to store four distinct types of data: temperatu
 | Date | Change | Author |
 | --- | --- | --- |
 | 2026-11-14 | Initial proposal and acceptance | AI Agent |
+
+# About this document
+It was created with Gemma 4 with human oversight. 

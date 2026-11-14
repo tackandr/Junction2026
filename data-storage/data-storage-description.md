@@ -100,3 +100,6 @@ The `TimeSeriesStore` typically persists data to a local database file. To reset
 
 ### Consumption Path
 `Web Dashboard` $\rightarrow$ `Python API Endpoint` $\rightarrow$ `TimeSeriesStore / Filesystem` $\rightarrow$ `JSON Response` $\rightarrow$ `UI Rendering`
+
+# About this document
+It was created with Gemma 4 with human oversight. 

@@ -57,3 +57,6 @@ Automatic purging is disabled to prevent accidental data loss. The operator will
 - **Consumption:** 
     - Charts $\rightarrow$ Direct API calls to `TimeSeriesStore`.
     - Images $\rightarrow$ Static file serving from the `/evidence/` directory.
+    
+# About this document
+It was created with Gemma 4 with human oversight. 
