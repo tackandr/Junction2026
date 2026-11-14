@@ -1,12 +1,13 @@
 # Arduino UNO Q App Lab Examples
 
-This repository currently contains three Arduino App Lab examples for the UNO Q:
+This repository currently contains four Arduino App Lab examples for the UNO Q:
 
 - **Blink LED** (`example_blink_led`) — a Python app calls the MCU sketch over the UNO Q Bridge to blink the built-in LED.
 - **Home Climate Monitoring** (`example_climate_monitor`) — reads a Modulino Thermo, stores temperature and relative humidity samples, and serves a local chart dashboard.
 - **Detect Objects on Camera** (`example_video_object_detection`) — runs the camera feed through the object detection Brick and shows live detections in a web interface.
+- **VisioSense** (`visiosense`) — captures a USB camera image every five seconds, overwrites the previous JPEG, and displays the latest image in a web interface.
 
-The examples are complete App Lab app folders. The video example is Python-only and includes its browser assets; the Blink and climate examples also include MCU sketches. The climate and video examples use the Web UI Brick.
+The examples are complete App Lab app folders. The video and VisioSense examples are Python-only and include their browser assets; the Blink and climate examples also include MCU sketches. The climate, video, and VisioSense examples use the Web UI Brick.
 
 ## Requirements
 
@@ -15,6 +16,7 @@ The examples are complete App Lab app folders. The video example is Python-only 
 - For ADB deployment: the board is connected to Ubuntu over USB-C, `google-android-platform-tools-installer` is installed, and Arduino udev rules are installed.
 - Modulino Thermo connected to the UNO Q Qwiic connector for the climate example.
 - For video detection: Network Mode enabled on the UNO Q and a USB or CSI camera connected. A USB camera requires a powered USB-C hub.
+- For VisioSense: a USB camera connected to the UNO Q through a powered USB-C hub.
 
 ### Connect over SSH (Wi-Fi)
 
@@ -101,7 +103,7 @@ The App Lab CLI is preinstalled on the UNO Q. The deployment scripts copy an exa
 
 ## Deploy and run
 
-### Blink, climate, and video over SSH
+### Blink, climate, video, and VisioSense over SSH
 
 Deploy an app over the private hotspot using the default board hostname:
 
@@ -109,11 +111,12 @@ Deploy an app over the private hotspot using the default board hostname:
 ./deploy-ssh.sh blink
 ./deploy-ssh.sh climate
 ./deploy-ssh.sh video
+./deploy-ssh.sh visiosense
 ```
 
 Set `BOARD_HOST=<board-ip>` if the hostname does not resolve. The climate app requires the Modulino Thermo connected to the UNO Q Qwiic connector. The video app requires a camera connected to the UNO Q; a USB camera must be connected through a powered USB-C hub. For video, Network Mode must already be enabled. The SSH deploy script checks the setting and, if it is disabled, stops and prints the command to enable it once. When it is enabled, the script proceeds without asking for the password to change Network Mode.
 
-Climate and video serve their dashboards on port 7000. Open `http://commit-and-conquer.local:7000` on the same private Wi-Fi network. The video UI also loads its camera stream from port 4912; both ports must be reachable from the computer. No ADB port forwarding is needed. If you set `BOARD_HOST` to an IP address, use `http://<board-ip>:7000` instead.
+Climate, video, and VisioSense serve their dashboards on port 7000. Open `http://commit-and-conquer.local:7000` on the same private Wi-Fi network. The video UI also loads its camera stream from port 4912; both ports must be reachable from the computer. No ADB port forwarding is needed. If you set `BOARD_HOST` to an IP address, use `http://<board-ip>:7000` instead. VisioSense captures the latest image at 1920×1080 every five seconds and replaces `/home/arduino/ArduinoApps/visiosense/data/latest.jpg`; it does not keep image history.
 
 Stop the apps over SSH with:
 
@@ -121,6 +124,7 @@ Stop the apps over SSH with:
 ./stop-ssh.sh blink
 ./stop-ssh.sh climate
 ./stop-ssh.sh video
+./stop-ssh.sh visiosense
 ```
 
 ### Deploy using ADB over USB

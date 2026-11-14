@@ -31,8 +31,12 @@ case "$APP_NAME" in
     APP_DIR="/home/arduino/ArduinoApps/video-generic-object-detection"
     APP_LABEL="Detect Objects on Camera"
     ;;
+  visiosense)
+    APP_DIR="/home/arduino/ArduinoApps/visiosense"
+    APP_LABEL="VisioSense"
+    ;;
   *)
-    echo "Usage: BOARD_HOST=<board-ip-or-hostname> $0 [blink|climate|video]" >&2
+    echo "Usage: BOARD_HOST=<board-ip-or-hostname> $0 [blink|climate|video|visiosense]" >&2
     exit 2
     ;;
 esac

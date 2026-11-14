@@ -1,0 +1,43 @@
+<!--
+SPDX-FileCopyrightText: Copyright (C) Arduino s.r.l. and/or its affiliated companies
+
+SPDX-License-Identifier: MPL-2.0
+-->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VisioSense</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="header">
+        <div class="eyebrow">UNO Q · CAMERA MONITOR</div>
+        <h1>VisioSense</h1>
+        <p class="subtitle">A fresh image every five seconds. Only the latest image is kept.</p>
+      </header>
+
+      <section class="image-card" aria-live="polite">
+        <div class="image-frame">
+          <img id="latest-image" alt="Latest image from the VisioSense camera" hidden />
+          <div id="placeholder" class="placeholder">
+            <div class="camera-icon" aria-hidden="true">◎</div>
+            <p>Waiting for the first camera image…</p>
+          </div>
+        </div>
+        <footer class="image-footer">
+          <span id="status" class="status">Connecting to VisioSense</span>
+          <span id="image-size" class="image-size"></span>
+        </footer>
+      </section>
+      <p id="connection-error" class="connection-error" hidden></p>
+    </main>
+
+    <script src="./libs/socket.io.min.js"></script>
+    <script src="./libs/arduino.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

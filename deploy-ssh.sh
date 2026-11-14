@@ -45,8 +45,15 @@ case "$EXAMPLE" in
     NEEDS_ASSETS=true
     NEEDS_SKETCH=false
     ;;
+  visiosense)
+    APP_SOURCE="$SCRIPT_DIR/visiosense"
+    APP_DIR="/home/arduino/ArduinoApps/visiosense"
+    APP_LABEL="VisioSense"
+    NEEDS_ASSETS=true
+    NEEDS_SKETCH=false
+    ;;
   *)
-    echo "Usage: BOARD_HOST=<board-ip-or-hostname> $0 [blink|climate|video]" >&2
+    echo "Usage: BOARD_HOST=<board-ip-or-hostname> $0 [blink|climate|video|visiosense]" >&2
     exit 2
     ;;
 esac
@@ -134,7 +141,7 @@ if [[ "$EXAMPLE" == "video" ]]; then
 fi
 REMOTE_COMMAND="mkdir -p '$APP_DIR' && tar -xzf - -C '$APP_DIR' && arduino-app-cli app start '$APP_DIR'"
 tar -czf - -C "$APP_SOURCE" "${APP_PATHS[@]}" | ssh -p "$SSH_PORT" -T "$SSH_TARGET" "$REMOTE_COMMAND"
-if [[ "$EXAMPLE" == "climate" || "$EXAMPLE" == "video" ]]; then
+if [[ "$EXAMPLE" == "climate" || "$EXAMPLE" == "video" || "$EXAMPLE" == "visiosense" ]]; then
   echo "Dashboard: http://$BOARD_HOST:7000"
   if [[ "$EXAMPLE" == "video" ]]; then
     echo "Camera stream: http://$BOARD_HOST:4912/embed"
