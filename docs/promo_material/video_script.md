@@ -16,10 +16,10 @@ VisioSense demonstrates how affordable Edge AI technology can make atmospheric v
 
 - Use a documentary-style presentation combining real-world footage, simple animations, technical visuals, and prototype demonstrations.
 - Maintain a clear narrative progression: **Impact → Problem → Solution → Demonstration → Future Potential**.
-- Use smooth transitions between sections.
+- Use match cuts between sections.
 - Synchronize narration with relevant visuals.
 - Include short text overlays highlighting important concepts.
-- Use subtle background music that does not overpower narration.
+- Use smooth jazz music that does not overpower narration.
 - Prioritize actual prototype footage when explaining the system.
 - Do not imply that the prototype already provides operational weather forecasts or certified meteorological measurements.
 - Aim for a final duration of approximately 180 seconds.
