@@ -32,47 +32,6 @@ The hardware specifications are recorded separately in [ADR-0001](adr-0001-hardw
 **Chosen option:** `arduino:object_detection`
 
 **Rationale:** The still-image object detection Brick accepts an image directly and provides the per-object location and confidence data required by later landmark processing. Image classification does not provide bounding boxes. The video object detection Brick targets a live stream, while this system captures discrete still images.
-
-### Positive Consequences
-
-- Detection results include the object tag, bounding box, and confidence needed by downstream processing.
-- The Brick's still-image input matches the planned capture workflow.
-- The decision keeps object detection on the edge device within the Arduino App Lab Brick architecture.
-
-### Negative Consequences and Trade-offs
-
-- The still-image Brick's availability and behavior must be confirmed on the target UNO Q App Lab installation.
-- The detection model's supported labels and performance may limit which configured landmarks it can recognize.
-- This Brick choice alone does not establish that an AI detection indicates meteorological visibility; that inference requires a separate strategy and validation.
-
-## Options Analysis
-
-| Option | Benefits | Drawbacks | Notes |
-| --- | --- | --- | --- |
-| `arduino:image_classification` | Returns image-level class confidence. | Does not locate objects or return bounding boxes. | Does not meet the per-object data requirement. |
-| `arduino:object_detection` | Accepts a still image and returns classes, boxes, and confidence values. | Requires checking model and Brick support on the target device. | Selected. |
-| `arduino:video_object_detection` | Designed for continuous camera streams and detection callbacks. | Its live-stream workflow does not match discrete still-image input as directly. | The repository README references this Brick for a separate video example. |
-
-## Implementation Notes
-
-- [ ] Confirm `arduino:object_detection` is available for the target UNO Q and App Lab version.
-- [ ] Confirm the Brick accepts the captured still-image format and exposes each detection's tag, bounding box, and confidence score.
-- [ ] Record the selected object detection model and its supported labels in the implementation documentation.
-- [ ] Keep image disposal and detection-result retention behavior consistent with the surrounding system design.
-
-## Validation and Review
-
-- **Success criteria:** A captured still image can be passed to `arduino:object_detection`, and the returned results include a tag, bounding box, and confidence score for each detected object.
-- **Review date or trigger:** Review after the first on-device integration, or if the selected Brick or model is unavailable or cannot provide the required result fields.
-
-## References
-
-- [Arduino App Lab AI models and Bricks documentation](https://docs.arduino.cc/software/app-lab/integrations/ai-models/)
-- [Arduino object detection Brick example](https://github.com/arduino/app-bricks-examples/tree/main/inspirational/common/object-detection)
-- [ADR-0001: Hardware specifications](adr-0001-hardware-specifications.md)
-
-## Change History
-
 | Date | Change | Author |
 | --- | --- | --- |
 | 2026-11-14 | Initial proposal | Project team |
