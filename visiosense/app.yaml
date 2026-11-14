@@ -1,6 +1,8 @@
 name: VisioSense
 icon: 🌫️
-description: Captures a new camera image every five seconds and shows the latest one in a web UI.
+description: Captures a new camera image every five seconds, estimates visibility from bottle and cup detections, and charts the distance in meters.
 
 bricks:
   - arduino:web_ui
+  - arduino:object_detection
+  - arduino:dbstorage_tsstore

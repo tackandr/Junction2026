@@ -11,6 +11,8 @@ from pathlib import Path
 import cv2
 from fastapi.responses import FileResponse, Response
 
+from arduino.app_bricks.dbstorage_tsstore import TimeSeriesStore
+from arduino.app_bricks.object_detection import ObjectDetection
 from arduino.app_bricks.web_ui import WebUI
 from arduino.app_peripherals.camera import Camera
 from arduino.app_utils import App
@@ -19,6 +21,7 @@ CAPTURE_INTERVAL_SECONDS = 5
 CAMERA_RESOLUTION = (1920, 1080)
 CAMERA_FPS = 10
 JPEG_QUALITY = 85
+DETECTION_CONFIDENCE = 0.35
 
 APP_DIRECTORY = Path(__file__).resolve().parents[1]
 DATA_DIRECTORY = APP_DIRECTORY / "data"
@@ -28,6 +31,8 @@ TEMP_IMAGE_PATH = DATA_DIRECTORY / "latest.jpg.tmp"
 DATA_DIRECTORY.mkdir(parents=True, exist_ok=True)
 
 ui = WebUI()
+db = TimeSeriesStore()
+object_detection = None
 state_lock = threading.Lock()
 thread_lock = threading.Lock()
 stop_event = threading.Event()
@@ -52,6 +57,105 @@ def get_latest_image():
 
 
 ui.expose_api("GET", "/latest.jpg", get_latest_image)
+
+
+def on_get_samples(resource: str, start: str, aggr_window: str):
+    samples = db.read_samples(
+        measure=resource,
+        start_from=start,
+        aggr_window=aggr_window,
+        aggr_func="mean",
+        limit=100,
+    )
+    return [{"ts": sample[1], "value": sample[2]} for sample in samples]
+
+
+ui.expose_api(
+    "GET",
+    "/get_samples/{resource}/{start}/{aggr_window}",
+    on_get_samples,
+)
+
+
+def record_visibility(distance_m, timestamp_ms=None):
+    if timestamp_ms is None:
+        timestamp_ms = int(time.time() * 1000)
+
+    value = float(distance_m)
+    try:
+        db.write_sample("visibility_in_air", value, timestamp_ms)
+    except Exception as error:
+        print("Could not store visibility sample: %s" % error)
+
+    ui.send_message("visibility", {"value": value, "ts": timestamp_ms})
+    print("Estimated visibility: %s m" % value)
+
+
+def estimate_visibility_distance(detections):
+    visible_classes = {
+        detection["class_name"].strip().lower()
+        for detection in detections
+        if detection.get("class_name")
+    }
+
+    # Visibility is set by the furthest recognized landmark. A bottle alone
+    # therefore gives 1000 m, even if the nearer cup was missed.
+    if "bottle" in visible_classes:
+        return 1000
+    if "cup" in visible_classes:
+        return 500
+    return 0
+
+
+def detect_objects(jpeg_bytes, captured_at):
+    global object_detection
+
+    try:
+        if object_detection is None:
+            object_detection = ObjectDetection()
+        result = object_detection.detect(
+            jpeg_bytes,
+            confidence=DETECTION_CONFIDENCE,
+        )
+        detections = []
+        if isinstance(result, dict):
+            for item in result.get("detection", []):
+                class_name = item.get("class_name")
+                bounding_box = item.get("bounding_box_xyxy")
+                if not class_name or not isinstance(bounding_box, (list, tuple)) or len(bounding_box) != 4:
+                    continue
+                try:
+                    box = [int(round(float(value))) for value in bounding_box]
+                    confidence = float(item.get("confidence", 0.0))
+                except (TypeError, ValueError):
+                    continue
+                detections.append(
+                    {
+                        "class_name": str(class_name),
+                        "confidence": confidence,
+                        "bounding_box_xyxy": box,
+                    }
+                )
+
+        distance_m = estimate_visibility_distance(detections)
+        record_visibility(distance_m, captured_at["ts"])
+        ui.send_message(
+            "detection_result",
+            {
+                "captured_at": captured_at["iso"],
+                "detections": detections,
+                "visibility_distance_m": distance_m,
+            },
+        )
+        print("Object detection found %s object(s)." % len(detections))
+    except Exception as error:
+        message = str(error)
+        print("Object detection failed: %s" % message)
+        record_visibility(0, captured_at["ts"])
+        ui.send_message(
+            "detection_error",
+            {"captured_at": captured_at["iso"], "message": message},
+        )
 
 
 def capture_images():
@@ -94,8 +198,13 @@ def capture_images():
             os.replace(TEMP_IMAGE_PATH, LATEST_IMAGE_PATH)
 
             height, width = frame.shape[:2]
+            capture_time = datetime.now(timezone.utc)
+            captured_at = {
+                "iso": capture_time.isoformat(timespec="milliseconds"),
+                "ts": int(capture_time.timestamp() * 1000),
+            }
             snapshot = {
-                "captured_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                "captured_at": captured_at["iso"],
                 "width": int(width),
                 "height": int(height),
             }
@@ -108,6 +217,7 @@ def capture_images():
                 "Captured %sx%s JPEG at %s"
                 % (width, height, snapshot["captured_at"])
             )
+            detect_objects(encoded_jpeg.tobytes(), captured_at)
             next_snapshot_at = now + CAPTURE_INTERVAL_SECONDS
 
         except Exception as error:
@@ -115,6 +225,7 @@ def capture_images():
             print("Camera capture failed: %s" % message)
             with state_lock:
                 latest_error = message
+            record_visibility(0)
             ui.send_message("camera_error", {"message": message})
 
             if camera is not None:

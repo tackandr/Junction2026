@@ -5,7 +5,7 @@ This repository currently contains four Arduino App Lab examples for the UNO Q:
 - **Blink LED** (`example_blink_led`) — a Python app calls the MCU sketch over the UNO Q Bridge to blink the built-in LED.
 - **Home Climate Monitoring** (`example_climate_monitor`) — reads a Modulino Thermo, stores temperature and relative humidity samples, and serves a local chart dashboard.
 - **Detect Objects on Camera** (`example_video_object_detection`) — runs the camera feed through the object detection Brick and shows live detections in a web interface.
-- **VisioSense** (`visiosense`) — captures a USB camera image every five seconds, overwrites the previous JPEG, and displays the latest image in a web interface.
+- **VisioSense** (`visiosense`) — captures a USB camera image every five seconds, detects objects, estimates visibility distance from a bottle and cup, logs a time series, and shows the latest image and detections.
 
 The examples are complete App Lab app folders. The video and VisioSense examples are Python-only and include their browser assets; the Blink and climate examples also include MCU sketches. The climate, video, and VisioSense examples use the Web UI Brick.
 
@@ -116,7 +116,7 @@ Deploy an app over the private hotspot using the default board hostname:
 
 Set `BOARD_HOST=<board-ip>` if the hostname does not resolve. The climate app requires the Modulino Thermo connected to the UNO Q Qwiic connector. The video app requires a camera connected to the UNO Q; a USB camera must be connected through a powered USB-C hub. For video, Network Mode must already be enabled. The SSH deploy script checks the setting and, if it is disabled, stops and prints the command to enable it once. When it is enabled, the script proceeds without asking for the password to change Network Mode.
 
-Climate, video, and VisioSense serve their dashboards on port 7000. Open `http://commit-and-conquer.local:7000` on the same private Wi-Fi network. The video UI also loads its camera stream from port 4912; both ports must be reachable from the computer. No ADB port forwarding is needed. If you set `BOARD_HOST` to an IP address, use `http://<board-ip>:7000` instead. VisioSense captures the latest image at 1920×1080 every five seconds and replaces `/home/arduino/ArduinoApps/visiosense/data/latest.jpg`; it does not keep image history.
+Climate, video, and VisioSense serve their dashboards on port 7000. Open `http://commit-and-conquer.local:7000` on the same private Wi-Fi network. The video UI also loads its camera stream from port 4912; both ports must be reachable from the computer. No ADB port forwarding is needed. If you set `BOARD_HOST` to an IP address, use `http://<board-ip>:7000` instead. VisioSense captures the latest image at 1920×1080 every five seconds and replaces `/home/arduino/ArduinoApps/visiosense/data/latest.jpg`; it does not keep image history. It estimates visibility as 1000 m when a bottle is detected, otherwise 500 m for a cup, or 0 m if neither is detected or capture/detection fails. These meter values are stored in VisioSense's `visibility_in_air` time series and shown in its dashboard.
 
 Stop the apps over SSH with:
 

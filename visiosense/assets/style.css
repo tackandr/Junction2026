@@ -64,6 +64,120 @@ h1 {
   box-shadow: 0 22px 70px rgba(0, 0, 0, 0.28);
 }
 
+.detections-card {
+  margin-top: 18px;
+  overflow: hidden;
+  border: 1px solid #2a3936;
+  border-radius: 18px;
+  background: #17211f;
+}
+
+.visibility-card {
+  margin-top: 18px;
+  overflow: hidden;
+  border: 1px solid #2a3936;
+  border-radius: 18px;
+  background: #17211f;
+}
+
+.visibility-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 17px 18px;
+  border-bottom: 1px solid #2a3936;
+}
+
+.visibility-heading h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+#current-visibility {
+  color: #77d9bb;
+  font-size: 1.2rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.visibility-chart-wrap {
+  position: relative;
+  height: 280px;
+  padding: 14px 18px 18px;
+}
+
+.chart-empty {
+  position: absolute;
+  inset: 14px 18px 18px;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: #aebdb8;
+  font-size: 0.88rem;
+  pointer-events: none;
+}
+
+.chart-empty[hidden] {
+  display: none;
+}
+
+.detections-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 17px 18px;
+  border-bottom: 1px solid #2a3936;
+}
+
+.detections-heading h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+#detection-count,
+.empty-result {
+  color: #aebdb8;
+  font-size: 0.88rem;
+}
+
+.detection-list {
+  display: grid;
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.detection-row {
+  display: grid;
+  grid-template-columns: minmax(100px, 1fr) 74px minmax(170px, 1.5fr);
+  align-items: center;
+  gap: 14px;
+  padding: 13px 18px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.detection-label {
+  overflow-wrap: anywhere;
+}
+
+.detection-confidence {
+  color: #77d9bb;
+  font-variant-numeric: tabular-nums;
+}
+
+.detection-box {
+  color: #aebdb8;
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
+}
+
+.empty-result {
+  margin: 0;
+  padding: 16px 18px;
+}
+
 .image-frame {
   display: grid;
   min-height: min(62vw, 360px);
@@ -137,5 +251,18 @@ h1 {
     align-items: flex-start;
     flex-direction: column;
     gap: 7px;
+  }
+
+  .detection-row {
+    grid-template-columns: 1fr auto;
+    gap: 7px 12px;
+  }
+
+  .detection-box {
+    grid-column: 1 / -1;
+  }
+
+  .visibility-chart-wrap {
+    height: 240px;
   }
 }

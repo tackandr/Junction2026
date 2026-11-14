@@ -33,9 +33,29 @@ SPDX-License-Identifier: MPL-2.0
           <span id="image-size" class="image-size"></span>
         </footer>
       </section>
+      <section class="visibility-card" aria-live="polite">
+        <div class="visibility-heading">
+          <h2>Estimated visibility</h2>
+          <strong id="current-visibility">— m</strong>
+        </div>
+        <div class="visibility-chart-wrap">
+          <canvas id="visibility-chart" aria-label="Visibility distance over time"></canvas>
+          <p id="visibility-chart-empty" class="chart-empty">Waiting for visibility samples…</p>
+        </div>
+      </section>
+      <section class="detections-card" aria-live="polite">
+        <div class="detections-heading">
+          <h2>Detected objects</h2>
+          <span id="detection-count">Waiting for image</span>
+        </div>
+        <ul id="detection-list" class="detection-list">
+          <li class="empty-result">Objects will appear here after the first image is analyzed.</li>
+        </ul>
+      </section>
       <p id="connection-error" class="connection-error" hidden></p>
     </main>
 
+    <script src="./libs/chart.umd.min.js"></script>
     <script src="./libs/socket.io.min.js"></script>
     <script src="./libs/arduino.js"></script>
     <script src="app.js"></script>
