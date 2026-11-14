@@ -6,5 +6,5 @@ Made with Google stitch, iterating several times on the content. In the end we r
 
 ## Notes
 All the numbers, views, points of interest, data sources etc. are completely made up. Everything in the mockup should be seen as a vision, not concrete.
-The images don't export correctly for the other scene jpg file, but are replaced in the html version with the static image.
+The images don't export correctly for the other screen.png file, but are replaced in the html version with the static image.
 
