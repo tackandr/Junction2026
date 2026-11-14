@@ -6,11 +6,13 @@
 
 ## Slide 1 — Visibility changes everything (00:00–00:15)
 
+At this hackathon we had a vision. A slightly clouded one one to be sure, but with some leverage from the AI tech sponsors and the arduino lab we lifted the shroud and brought it to sharper focus. I will note now that all images here are AI generated and are for illustrative purposes only. The slides will remind you if you forget.
+
 When visibility falls unexpectedly, transport slows and safety margins shrink. Yet many local conditions are not observed in detail. VisioSense explores a practical question: can an affordable edge device turn a camera view into useful visibility information?
 
 ## Slide 2 — Visibility affects safety and mobility (00:15–00:40)
 
-Fog can limit airport capacity, delay flights, and sometimes lead to diversions. At sea, reduced visibility can disrupt port operations and raise collision or grounding risks. On roads, it means lower speeds and greater collision risk. Haze can accompany poor air quality, but visibility alone cannot measure pollution.
+Fog can limit airport capacity, delay flights, and sometimes lead to diversions. At sea, reduced visibility can disrupt port operations and raise collision or grounding risks. On roads, it means lower speeds and greater collision risk. Haze can accompany poor air quality, though it should be noted that visibility alone cannot measure pollution.
 
 ## Slide 3 — Local visibility can change between stations (00:40–01:00)
 
@@ -18,7 +20,7 @@ Traditional visibility instruments are specialized and can be costly to deploy a
 
 ## Slide 4 — A small station. Processing stays local. (01:00–01:20)
 
-The prototype pairs a fixed USB camera and Modulino Thermo with an Arduino UNO Q. While the app is running, it captures a still about every five seconds and performs object detection locally. Temperature and relative humidity add environmental context.
+The prototype pairs a fixed USB camera and Modulino Thermo with an Arduino UNO Q. Simple and clean. While the app is running, it captures a still about every five seconds and performs object detection locally. Temperature and relative humidity add environmental context.
 
 ## Slide 5 — Known landmarks turn images into distance evidence (01:20–01:45)
 
@@ -26,11 +28,12 @@ With a fixed view and landmarks at known distances, detections can indicate how 
 
 ## Slide 6 — The furthest detected proxy sets the demo value (01:45–02:20)
 
+You might have noticed the hype arena is not outdoors. So we made a mock up.
 In our mock-up, the cup is nearer and the bottle farther. We classify each image independently: no qualifying proxy maps to 0 m, cup without bottle maps to 500 m, and any bottle detection maps to 1000 m. These are lower-bound demo values, not real-world measurements: the props do not sit at those distances. Lighting and contrast can also affect detection.
 
 ## Slide 7 — Visibility with environmental context (02:20–02:40)
 
-The app time-stamps visibility estimates with temperature and relative humidity readings. Visibility is stored in meters; sensor values use degrees Celsius and percent. These records make local trends available for review. This slide shows field names only, not invented readings.
+The app time-stamps visibility estimates with temperature and relative humidity readings. Visibility is stored in meters; sensor values use degrees Celsius and percent. These records make local trends available for review.
 
 ## Slide 8 — More local observations. Better questions. (02:40–03:00)
 
