@@ -15,7 +15,7 @@ from arduino.app_bricks.dbstorage_tsstore import TimeSeriesStore
 from arduino.app_bricks.object_detection import ObjectDetection
 from arduino.app_bricks.web_ui import WebUI
 from arduino.app_peripherals.camera import Camera
-from arduino.app_utils import App
+from arduino.app_utils import App, Bridge
 
 CAPTURE_INTERVAL_SECONDS = 5
 CAMERA_RESOLUTION = (1920, 1080)
@@ -75,6 +75,25 @@ ui.expose_api(
     "/get_samples/{resource}/{start}/{aggr_window}",
     on_get_samples,
 )
+
+
+def record_sensor_samples(celsius, humidity):
+    if celsius is None or humidity is None:
+        print("Received invalid Modulino Thermo sample.")
+        return
+
+    try:
+        temperature = float(celsius)
+        relative_humidity = float(humidity)
+        timestamp_ms = int(time.time() * 1000)
+        db.write_sample("temperature", temperature, timestamp_ms)
+        db.write_sample("humidity", relative_humidity, timestamp_ms)
+    except Exception as error:
+        print("Could not store Modulino Thermo sample: %s" % error)
+        return
+
+    ui.send_message("temperature", {"value": temperature, "ts": timestamp_ms})
+    ui.send_message("humidity", {"value": relative_humidity, "ts": timestamp_ms})
 
 
 def record_visibility(distance_m, timestamp_ms=None):
@@ -263,6 +282,8 @@ def on_ui_connect(session_id):
 
 
 ui.on_connect(on_ui_connect)
+
+Bridge.provide("record_sensor_samples", record_sensor_samples)
 
 print("Starting VisioSense...")
 App.run()

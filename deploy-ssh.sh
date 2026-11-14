@@ -50,7 +50,7 @@ case "$EXAMPLE" in
     APP_DIR="/home/arduino/ArduinoApps/visiosense"
     APP_LABEL="VisioSense"
     NEEDS_ASSETS=true
-    NEEDS_SKETCH=false
+    NEEDS_SKETCH=true
     ;;
   *)
     echo "Usage: BOARD_HOST=<board-ip-or-hostname> $0 [blink|climate|video|visiosense]" >&2

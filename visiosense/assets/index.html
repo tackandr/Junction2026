@@ -17,41 +17,66 @@ SPDX-License-Identifier: MPL-2.0
       <header class="header">
         <div class="eyebrow">UNO Q · CAMERA MONITOR</div>
         <h1>VisioSense</h1>
-        <p class="subtitle">A fresh image every five seconds. Only the latest image is kept.</p>
+        <p class="subtitle">Visibility range estimated from object detection.</p>
       </header>
 
-      <section class="image-card" aria-live="polite">
-        <div class="image-frame">
-          <img id="latest-image" alt="Latest image from the VisioSense camera" hidden />
-          <div id="placeholder" class="placeholder">
-            <div class="camera-icon" aria-hidden="true">◎</div>
-            <p>Waiting for the first camera image…</p>
-          </div>
+      <div class="dashboard-layout">
+        <div class="visual-column">
+          <section class="image-card" aria-live="polite">
+            <div class="image-frame">
+              <img id="latest-image" alt="Latest image from the VisioSense camera" hidden />
+              <div id="placeholder" class="placeholder">
+                <div class="camera-icon" aria-hidden="true">◎</div>
+                <p>Waiting for the first camera image…</p>
+              </div>
+            </div>
+            <footer class="image-footer">
+              <span id="status" class="status">Connecting to VisioSense</span>
+              <span id="image-size" class="image-size"></span>
+            </footer>
+          </section>
+
+          <section class="detections-card" aria-live="polite">
+            <div class="detections-heading">
+              <h2>Detected objects</h2>
+              <span id="detection-count">Waiting for image</span>
+            </div>
+            <ul id="detection-list" class="detection-list">
+              <li class="empty-result">Objects will appear here after the first image is analyzed.</li>
+            </ul>
+          </section>
         </div>
-        <footer class="image-footer">
-          <span id="status" class="status">Connecting to VisioSense</span>
-          <span id="image-size" class="image-size"></span>
-        </footer>
-      </section>
-      <section class="visibility-card" aria-live="polite">
-        <div class="visibility-heading">
-          <h2>Estimated visibility</h2>
-          <strong id="current-visibility">— m</strong>
+
+        <div class="metrics-column">
+          <section class="visibility-card" aria-live="polite">
+            <div class="visibility-heading">
+              <h2>Estimated visibility</h2>
+              <strong id="current-visibility">— m</strong>
+            </div>
+            <div class="visibility-chart-wrap">
+              <canvas id="visibility-chart" aria-label="Visibility distance over time"></canvas>
+              <p id="visibility-chart-empty" class="chart-empty">Waiting for visibility samples…</p>
+            </div>
+          </section>
+
+          <section class="climate-charts" aria-label="Climate measurements">
+            <article class="climate-chart-card" aria-live="polite">
+              <h2>Temperature</h2>
+              <div class="climate-chart-wrap">
+                <canvas id="temperature-chart" aria-label="Temperature over time in degrees Celsius"></canvas>
+                <p id="temperature-chart-empty" class="chart-empty">Waiting for temperature samples…</p>
+              </div>
+            </article>
+            <article class="climate-chart-card" aria-live="polite">
+              <h2>Relative humidity</h2>
+              <div class="climate-chart-wrap">
+                <canvas id="humidity-chart" aria-label="Relative humidity over time in percent"></canvas>
+                <p id="humidity-chart-empty" class="chart-empty">Waiting for humidity samples…</p>
+              </div>
+            </article>
+          </section>
         </div>
-        <div class="visibility-chart-wrap">
-          <canvas id="visibility-chart" aria-label="Visibility distance over time"></canvas>
-          <p id="visibility-chart-empty" class="chart-empty">Waiting for visibility samples…</p>
-        </div>
-      </section>
-      <section class="detections-card" aria-live="polite">
-        <div class="detections-heading">
-          <h2>Detected objects</h2>
-          <span id="detection-count">Waiting for image</span>
-        </div>
-        <ul id="detection-list" class="detection-list">
-          <li class="empty-result">Objects will appear here after the first image is analyzed.</li>
-        </ul>
-      </section>
+      </div>
       <p id="connection-error" class="connection-error" hidden></p>
     </main>
 

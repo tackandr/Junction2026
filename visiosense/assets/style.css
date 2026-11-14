@@ -32,6 +32,20 @@ body {
   padding: 52px 0 64px;
 }
 
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.68fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 18px;
+}
+
+.visual-column,
+.metrics-column {
+  display: grid;
+  min-width: 0;
+  gap: 18px;
+}
+
 .header {
   margin-bottom: 28px;
 }
@@ -65,7 +79,6 @@ h1 {
 }
 
 .detections-card {
-  margin-top: 18px;
   overflow: hidden;
   border: 1px solid #2a3936;
   border-radius: 18px;
@@ -73,11 +86,36 @@ h1 {
 }
 
 .visibility-card {
-  margin-top: 18px;
   overflow: hidden;
   border: 1px solid #2a3936;
   border-radius: 18px;
   background: #17211f;
+}
+
+.climate-charts {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+.climate-chart-card {
+  overflow: hidden;
+  border: 1px solid #2a3936;
+  border-radius: 18px;
+  background: #17211f;
+}
+
+.climate-chart-card h2 {
+  margin: 0;
+  padding: 17px 18px;
+  border-bottom: 1px solid #2a3936;
+  font-size: 1rem;
+}
+
+.climate-chart-wrap {
+  position: relative;
+  height: 205px;
+  padding: 14px 18px 18px;
 }
 
 .visibility-heading {
@@ -237,10 +275,14 @@ h1 {
   color: #ffb4a8;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 760px) {
   .page {
     width: min(100% - 24px, 1100px);
     padding-top: 32px;
+  }
+
+  .dashboard-layout {
+    grid-template-columns: 1fr;
   }
 
   .image-frame {
@@ -264,5 +306,9 @@ h1 {
 
   .visibility-chart-wrap {
     height: 240px;
+  }
+
+  .climate-chart-wrap {
+    height: 230px;
   }
 }
