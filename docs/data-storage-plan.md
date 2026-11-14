@@ -1,68 +1,47 @@
-# 📊 Data Storage Plan: VisioSense
+# 📊 Data Storage Plan: VisioSense (Tech Demo Edition)
 
 ## 1. Goal
-Define a robust, efficient, and scalable data storage architecture for the VisioSense environmental monitoring app. The system must handle diverse data types (time-series telemetry, AI-driven visibility metrics, and visual evidence) while operating within the hardware constraints of the Arduino UNO Q.
+Provide a "zero-friction" storage setup for a tech demo. The priority is rapid deployment (pull repo $\rightarrow$ run) and flexibility to change data formats on the fly.
+
+**Constraints:**
+- **Retention:** 12h to 48h only.
+- **Setup:** Minimal; rely on pre-installed App Lab Bricks and standard Python.
+- **Flexibility:** Handle undetermined data formats.
 
 ---
 
-## 2. Data Classification
-We categorize the data into three distinct streams based on their volume, frequency, and purpose.
+## 2. Simplified Data Strategy
 
-### A. Telemetry (Time-Series)
-*   **Description:** Continuous readings from environmental sensors.
-*   **Data Points:** Temperature, Relative Humidity, Light Level.
-*   **Characteristics:** High frequency (e.g., every 1–60 seconds), low volume per sample.
-*   **Priority:** High for trend analysis.
+### A. Metrics & Telemetry $\rightarrow$ `TimeSeriesStore`
+We will continue using the `TimeSeriesStore` brick because it is pre-installed and handles the time-stamping and basic storage automatically.
+- **Flexibility:** We will treat it as a key-value store. If we discover a new metric (e.g., `fog_density`), we simply start writing to a new key without updating a schema.
+- **Simplicity:** No database configuration required.
 
-### B. Visibility Metrics (AI-Derived)
-*   **Description:** Results from the AI visibility pipeline.
-*   **Data Points:** 
-    *   `visibility_estimate`: Estimated Meteorological Optical Range (MOR).
-    *   `confidence_score`: AI's confidence in the estimate.
-    *   `landmark_status`: A bitmask or JSON object representing which landmarks were detected (e.g., `{ "BuildingA": visible, "ChurchTower": obscured }`).
-*   **Characteristics:** Medium frequency (triggered by camera capture), medium volume.
-*   **Priority:** Critical for the core application value.
-
-### C. Visual Evidence (Blobs)
-*   **Description:** Images used for AI processing and human verification.
-*   **Data Points:** Full-frame captures, cropped landmark regions.
-*   **Characteristics:** Low frequency, high volume.
-*   **Priority:** Medium (essential for "Explainable AI" but storage-expensive).
+### B. Visual Evidence $\rightarrow$ Local Folder
+Images will be saved to a local directory.
+- **Format:** Standard JPG.
+- **Path:** `/home/arduino/ArduinoApps/visiosense/evidence/`
 
 ---
 
-## 3. Proposed Storage Architecture
+## 3. Lean Lifecycle Management (The "Demo Reset")
 
-### 3.1. Primary Storage: `TimeSeriesStore` (The "Brick")
-Following the pattern in `example_climate_monitor`, we will utilize the `arduino.app_bricks.dbstorage_tsstore.TimeSeriesStore`.
-*   **Usage:** All Telemetry and Visibility Metrics will be written as samples.
-*   **Why:** It provides built-in time-series management and aggregation (mean, max, min), which is ideal for dashboarding.
-*   **Schema:** `db.write_sample(measure_name, value, timestamp)`
+Since we only need 12-48h of data, we will avoid complex pruning. Instead, we implement a **Simple Purge**:
 
-### 3.2. Evidence Storage: File System
-Since `TimeSeriesStore` is for scalar values, image data will be stored directly on the Linux filesystem.
-*   **Path:** `/home/arduino/ArduinoApps/visiosense/evidence/`
-*   **Naming Convention:** `YYYYMMDD_HHMMSS_status.jpg`
-*   **Linking:** The `TimeSeriesStore` entry for a visibility event will contain the filename of the corresponding image as a metadata tag or a separate "pointer" sample.
+1.  **Startup Wipe (Optional):** The app can be configured to clear the `evidence/` folder on every fresh reboot to ensure the demo starts clean.
+2.  **Time-based TTL:** A simple background thread in `main.py` that deletes files older than 48 hours once every hour.
+    - *Logic:* `if file.age > 48h: os.remove(file)`
+3.  **Capped Storage:** A hard limit on the number of images (e.g., max 500 images). When the limit is hit, the oldest is deleted.
 
 ---
 
-## 4. Data Lifecycle & Management
+## 4. Integration & Flexibility
 
-### 4.1. Retention Policy
-To prevent flash memory exhaustion:
-*   **Telemetry:** Keep raw samples for 7 days $\rightarrow$ Aggregate to hourly means for 30 days $\rightarrow$ Delete.
-*   **Visibility Metrics:** Keep raw samples for 30 days.
-*   **Visual Evidence:** Store only "Change Events" (e.g., when visibility drops by >10%) and a daily baseline image. Delete others after 48 hours.
+### Data Format Evolution
+To keep the system flexible while we determine the actual format:
+- **Metric naming:** Use descriptive keys (e.g., `vis_mor_estimate` instead of `v1`).
+- **JSON Blobs:** If a metric becomes too complex for a single float (e.g., a list of detected landmarks), we will store a JSON string in a separate log file and link it via timestamp to the `TimeSeriesStore`.
 
-### 4.2. Flash Wear Mitigation
-*   **Batch Writing:** Group sensor updates to reduce write cycles.
-*   **Circular Buffers:** Implement fixed-size directories for evidence to automatically overwrite the oldest images.
-
----
-
-## 5. Integration with Web UI
-The storage will be exposed via the `WebUI` brick:
-*   **API Endpoint:** `GET /get_samples/{resource}/{start}/{window}`
-*   **Image Endpoint:** `GET /evidence/{filename}`
-*   **Explainability View:** A combined endpoint that returns the visibility estimate AND the status of individual landmarks used to calculate it.
+### Web UI Access
+- **Direct API:** The Web UI will query the `TimeSeriesStore` directly for charts.
+- **Static Serving:** Images will be served as static files from the `evidence/` directory.
