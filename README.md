@@ -149,6 +149,24 @@ Replace the example IP with the UNO Q's Wi-Fi address. The ADB alternative is `a
 
 Connect the camera before deployment. A USB camera needs a powered USB-C hub; the example also supports a CSI camera. The video app uses the `arduino:video_object_detection` and `arduino:web_ui` Bricks.
 
+## Download climate data
+
+With the climate app running, download recent temperature and humidity samples as JSON:
+
+```sh
+mkdir -p climate-export
+
+curl -fsS 'http://commit-and-conquer.local:7000/get_samples/temperature/-1h/5m' \
+  -o climate-export/temperature-last-hour.json
+
+curl -fsS 'http://commit-and-conquer.local:7000/get_samples/humidity/-1h/5m' \
+  -o climate-export/humidity-last-hour.json
+```
+
+The `-1h/5m` range returns five-minute averages for the last hour. To request hourly averages for the last day, change it to `-1d/1h`. For a closer-to-raw sample, use `-2m/1s`; the API returns at most 100 samples per request.
+
+If `commit-and-conquer.local` does not resolve, replace it with the UNO Q's current Wi-Fi IP address. With the ADB deploy script's port forwarding active, use `http://localhost:7000` as the base URL instead. The same endpoint also supports `dew_point`, `heat_index`, and `absolute_humidity` as measurement names.
+
 ## Stop an app
 
 Stop an example by name:
