@@ -53,6 +53,31 @@ esac
 
 SSH_TARGET="$SSH_USER@$BOARD_HOST"
 
+check_video_network_mode() {
+  local status
+
+  if ! status=$(ssh -p "$SSH_PORT" "$SSH_TARGET" "arduino-app-cli system network-mode status"); then
+    echo "Error: could not check Network Mode on $SSH_TARGET." >&2
+    return 1
+  fi
+
+  status="${status,,}"
+  if [[ "$status" == *disabled* ]]; then
+    echo "Error: Network Mode is disabled on the UNO Q." >&2
+    echo "Enable it once from an interactive terminal, then rerun this script:" >&2
+    echo "  ssh -t -p $SSH_PORT $SSH_TARGET arduino-app-cli system network-mode enable" >&2
+    return 1
+  fi
+
+  if [[ "$status" == *enabled* ]]; then
+    echo "Network Mode is already enabled."
+    return 0
+  fi
+
+  echo "Error: unexpected Network Mode status from $SSH_TARGET: $status" >&2
+  return 1
+}
+
 set_wifi_priorities() {
   local remote_command=""
   local quoted_profile
@@ -104,8 +129,8 @@ fi
 echo "Sending the $APP_LABEL example to $SSH_TARGET:$APP_DIR and starting it..."
 set_wifi_priorities
 if [[ "$EXAMPLE" == "video" ]]; then
-  echo "Enabling Network Mode for video detection..."
-  ssh -t -p "$SSH_PORT" "$SSH_TARGET" "arduino-app-cli system network-mode enable"
+  echo "Checking Network Mode for video detection..."
+  check_video_network_mode
 fi
 REMOTE_COMMAND="mkdir -p '$APP_DIR' && tar -xzf - -C '$APP_DIR' && arduino-app-cli app start '$APP_DIR'"
 tar -czf - -C "$APP_SOURCE" "${APP_PATHS[@]}" | ssh -p "$SSH_PORT" -T "$SSH_TARGET" "$REMOTE_COMMAND"

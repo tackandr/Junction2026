@@ -38,7 +38,7 @@ Then copy the public key:
 ssh-copy-id arduino@commit-and-conquer.local
 ```
 
-If mDNS is unavailable, use the board's Wi-Fi IP instead, for example `ssh-copy-id arduino@192.168.1.42`. Accept the host key and enter the Linux password set during board setup when prompted. This adds your public key to the board's `~/.ssh/authorized_keys`, so subsequent SSH connections—including the deploy and stop scripts—can authenticate with the key. The video deploy script may still prompt for the board's Linux password to enable Network Mode; Wi-Fi priority changes may also prompt when `sudo nmcli` is used.
+If mDNS is unavailable, use the board's Wi-Fi IP instead, for example `ssh-copy-id arduino@192.168.1.42`. Accept the host key and enter the Linux password set during board setup when prompted. This adds your public key to the board's `~/.ssh/authorized_keys`, so subsequent SSH connections—including the deploy and stop scripts—can authenticate with the key. The video deploy script checks Network Mode and does not try to change it; Wi-Fi priority changes may still prompt for the board's Linux password when `sudo nmcli` is used.
 
 Test the connection and leave the board shell with `exit`:
 
@@ -111,7 +111,7 @@ Deploy an app over the private hotspot using the default board hostname:
 ./deploy-ssh.sh video
 ```
 
-Set `BOARD_HOST=<board-ip>` if the hostname does not resolve. The climate app requires the Modulino Thermo connected to the UNO Q Qwiic connector. The video app requires a camera connected to the UNO Q; a USB camera must be connected through a powered USB-C hub. The deploy script enables Network Mode for video, transfers the app and starts it.
+Set `BOARD_HOST=<board-ip>` if the hostname does not resolve. The climate app requires the Modulino Thermo connected to the UNO Q Qwiic connector. The video app requires a camera connected to the UNO Q; a USB camera must be connected through a powered USB-C hub. For video, Network Mode must already be enabled. The SSH deploy script checks the setting and, if it is disabled, stops and prints the command to enable it once. When it is enabled, the script proceeds without asking for the password to change Network Mode.
 
 Climate and video serve their dashboards on port 7000. Open `http://commit-and-conquer.local:7000` on the same private Wi-Fi network. The video UI also loads its camera stream from port 4912; both ports must be reachable from the computer. No ADB port forwarding is needed. If you set `BOARD_HOST` to an IP address, use `http://<board-ip>:7000` instead.
 
@@ -141,15 +141,21 @@ LOCAL_PORT=17000 ./deploy-adb.sh climate
 
 Then open `http://localhost:17000`. For video, run `LOCAL_PORT=17000 ./deploy-adb.sh video`; local port 4912 must also be available for its camera feed.
 
-The first start can take a few minutes while the CLI prepares dependencies. The video deploy script may prompt for the board's Linux password when enabling Network Mode, even if SSH key authentication is configured. Each web dashboard is available only while its app is running.
+The first start can take a few minutes while the CLI prepares dependencies. Network Mode must be enabled for video. The SSH deploy script checks its status; the ADB deploy script does not check or enable it. The CLI asks for the board's Linux password when changing this system setting; SSH keys authenticate the SSH connection but do not replace that separate authorization. Each web dashboard is available only while its app is running.
 
-Enable Network Mode on the board before starting the video example if it is not already enabled. If SSH is available, run this on the board remotely:
+Check Network Mode status over SSH (the [UNO Q Linux guide](https://docs.arduino.cc/tutorials/uno-q/debian-guide/) documents these CLI commands):
+
+```sh
+ssh arduino@192.168.1.42 arduino-app-cli system network-mode status
+```
+
+Replace the example IP with the UNO Q's Wi-Fi address. If the result is `disabled`, enable it once from an interactive terminal:
 
 ```sh
 ssh -t arduino@192.168.1.42 arduino-app-cli system network-mode enable
 ```
 
-Replace the example IP with the UNO Q's Wi-Fi address. The ADB alternative is `adb shell arduino-app-cli system network-mode enable` when connected directly over USB.
+The ADB alternative is `adb shell arduino-app-cli system network-mode enable` when connected directly over USB. Run the enable command once from an interactive terminal if status is `disabled`. Later SSH video deployments only check the status and skip the password-protected change.
 
 Connect the camera before deployment. A USB camera needs a powered USB-C hub; the example also supports a CSI camera. The video app uses the `arduino:video_object_detection` and `arduino:web_ui` Bricks.
 
