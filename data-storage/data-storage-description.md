@@ -63,7 +63,17 @@ Use prefixes to categorize data keys:
 
 ---
 
-## 4. Manual Data Maintenance
+## 4. Access & Connectivity
+
+When the application is running on the Arduino UNO Q and the host laptop is connected via WiFi/SSH, the dashboard is accessible via the local network.
+
+- **Web UI URL:** `http://commit-and-conquer.local:7000/`
+- **Protocol:** HTTP
+- **Port:** 7000 (default for App Lab WebUI)
+
+---
+
+## 5. Manual Data Maintenance
 
 Automatic purging is disabled to prevent accidental data loss during demonstrations. Data should be cleared manually by the operator. This applies regardless of whether the app was deployed via ADB or SSH.
 
