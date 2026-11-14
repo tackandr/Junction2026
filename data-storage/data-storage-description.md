@@ -6,19 +6,23 @@ This document serves as the technical source of truth for the VisioSense data st
 
 ## 1. Storage Architecture Overview
 
-The system uses a hybrid storage approach to balance the need for fast time-series queries and high-volume binary data (images).
+The system follows an "Edge-First" principle: **everything lives on the Arduino UNO Q**. We use a hybrid storage approach to balance the need for fast time-series queries and high-volume binary data.
+
+### Data Type Mapping
+The project tracks four primary types of data:
 
 | Data Type | Storage Mechanism | Location / Tool | Purpose |
 | :--- | :--- | :--- | :--- |
-| **Telemetry & Metrics** | `TimeSeriesStore` | `arduino.app_bricks.dbstorage_tsstore` | Scalar values, trends, and AI estimates. |
-| **Visual Evidence** | Local Filesystem | `/home/arduino/ArduinoApps/visiosense/evidence/` | JPEG images and metadata blobs. |
-| **App Configuration** | Local Filesystem | `/home/arduino/ArduinoApps/visiosense/config.yaml` | Static settings and landmark definitions. |
+| **Temperature** | `TimeSeriesStore` | `arduino.app_bricks.dbstorage_tsstore` | Environmental baseline. |
+| **Humidity** | `TimeSeriesStore` | `arduino.app_bricks.dbstorage_tsstore` | Environmental baseline. |
+| **Camera Images** | Local Filesystem | `/home/arduino/ArduinoApps/visiosense/evidence/` | Raw evidence & verification. |
+| **Processed Data** | `TimeSeriesStore` + JSON | `TimeSeriesStore` / `evidence/` folder | AI-derived visibility metrics. |
 
 ---
 
 ## 2. Technical Specifications
 
-### 2.1 Time-Series Metrics
+### 2.1 Time-Series Metrics (Temp, Humidity, Processed Data)
 All numerical data is handled by the `TimeSeriesStore` brick. This ensures that the Web UI can efficiently aggregate and chart data.
 
 **Implementation Details:**
@@ -31,7 +35,7 @@ All numerical data is handled by the `TimeSeriesStore` brick. This ensures that 
 - **Reading Data:**
   `db.read_samples(measure: str, start_from: str, aggr_window: str, aggr_func: str, limit: int)`
 
-### 2.2 Visual Evidence (Images)
+### 2.2 Visual Evidence (Camera Images)
 Images are stored as files to avoid database bloat.
 
 **Implementation Details:**
@@ -51,8 +55,8 @@ Use prefixes to categorize data keys:
 - `vis_`: Visibility AI metrics (e.g., `vis_mor_estimate`, `vis_confidence`).
 - `sys_`: System health (e.g., `sys_cpu_load`, `sys_uptime`).
 
-### 3.2 Complex Data Handling
-`TimeSeriesStore` only supports scalar floats. For complex AI output (e.g., a list of visible landmarks):
+### 3.2 Complex Processed Data
+`TimeSeriesStore` only supports scalar floats. For complex AI output (e.g., a list of visible landmarks or object detection results as seen in `example_video_object_detection`):
 1. Store the primary estimate (e.g., `vis_mor_estimate`) in `TimeSeriesStore`.
 2. Create a companion JSON file in the `evidence/` folder: `YYYYMMDD_HHMMSS_meta.json`.
 3. Store the detailed breakdown in that JSON file.
@@ -61,7 +65,7 @@ Use prefixes to categorize data keys:
 
 ## 4. Manual Data Maintenance
 
-Automatic purging is disabled to prevent accidental data loss during demonstrations. Data should be cleared manually by the operator.
+Automatic purging is disabled to prevent accidental data loss during demonstrations. Data should be cleared manually by the operator. This applies regardless of whether the app was deployed via ADB or SSH.
 
 ### 4.1 Clearing Visual Evidence
 To delete all stored images:
