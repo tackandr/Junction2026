@@ -32,6 +32,5 @@ The hardware specifications are recorded separately in [ADR-0001](adr-0001-hardw
 **Chosen option:** `arduino:object_detection`
 
 **Rationale:** The still-image object detection Brick accepts an image directly and provides the per-object location and confidence data required by later landmark processing. Image classification does not provide bounding boxes. The video object detection Brick targets a live stream, while this system captures discrete still images.
-| Date | Change | Author |
 | --- | --- | --- |
 | 2026-11-14 | Initial proposal | Project team |
