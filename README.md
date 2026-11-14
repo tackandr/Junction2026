@@ -38,7 +38,7 @@ Then copy the public key:
 ssh-copy-id arduino@commit-and-conquer.local
 ```
 
-If mDNS is unavailable, use the board's Wi-Fi IP instead, for example `ssh-copy-id arduino@192.168.1.42`. Accept the host key and enter the Linux password set during board setup when prompted. This adds your public key to the board's `~/.ssh/authorized_keys`, so subsequent SSH connections—including the deploy and stop scripts—can authenticate with the key. The scripts may still prompt for the Linux password when `sudo nmcli` is used to change Wi-Fi priorities.
+If mDNS is unavailable, use the board's Wi-Fi IP instead, for example `ssh-copy-id arduino@192.168.1.42`. Accept the host key and enter the Linux password set during board setup when prompted. This adds your public key to the board's `~/.ssh/authorized_keys`, so subsequent SSH connections—including the deploy and stop scripts—can authenticate with the key. The video deploy script may still prompt for the board's Linux password to enable Network Mode; Wi-Fi priority changes may also prompt when `sudo nmcli` is used.
 
 Test the connection and leave the board shell with `exit`:
 
@@ -101,22 +101,26 @@ The App Lab CLI is preinstalled on the UNO Q. The deployment scripts copy an exa
 
 ## Deploy and run
 
-### Blink and climate over SSH
+### Blink, climate, and video over SSH
 
-Deploy either app over the private hotspot using the default board hostname:
+Deploy an app over the private hotspot using the default board hostname:
 
 ```sh
 ./deploy-ssh.sh blink
 ./deploy-ssh.sh climate
+./deploy-ssh.sh video
 ```
 
-Set `BOARD_HOST=<board-ip>` if the hostname does not resolve. The climate app requires the Modulino Thermo connected to the UNO Q Qwiic connector. The deploy script transfers and starts it, then prints the dashboard URL. Open `http://commit-and-conquer.local:7000` on the same private Wi-Fi network. If you set `BOARD_HOST` to an IP address, use `http://<board-ip>:7000` instead.
+Set `BOARD_HOST=<board-ip>` if the hostname does not resolve. The climate app requires the Modulino Thermo connected to the UNO Q Qwiic connector. The video app requires a camera connected to the UNO Q; a USB camera must be connected through a powered USB-C hub. The deploy script enables Network Mode for video, transfers the app and starts it.
+
+Climate and video serve their dashboards on port 7000. Open `http://commit-and-conquer.local:7000` on the same private Wi-Fi network. The video UI also loads its camera stream from port 4912; both ports must be reachable from the computer. No ADB port forwarding is needed. If you set `BOARD_HOST` to an IP address, use `http://<board-ip>:7000` instead.
 
 Stop the apps over SSH with:
 
 ```sh
 ./stop-ssh.sh blink
 ./stop-ssh.sh climate
+./stop-ssh.sh video
 ```
 
 ### Deploy using ADB over USB
@@ -137,12 +141,12 @@ LOCAL_PORT=17000 ./deploy-adb.sh climate
 
 Then open `http://localhost:17000`. For video, run `LOCAL_PORT=17000 ./deploy-adb.sh video`; local port 4912 must also be available for its camera feed.
 
-The first start can take a few minutes while the CLI prepares dependencies. Each web dashboard is available only while its app is running.
+The first start can take a few minutes while the CLI prepares dependencies. The video deploy script may prompt for the board's Linux password when enabling Network Mode, even if SSH key authentication is configured. Each web dashboard is available only while its app is running.
 
 Enable Network Mode on the board before starting the video example if it is not already enabled. If SSH is available, run this on the board remotely:
 
 ```sh
-ssh arduino@192.168.1.42 arduino-app-cli system network-mode enable
+ssh -t arduino@192.168.1.42 arduino-app-cli system network-mode enable
 ```
 
 Replace the example IP with the UNO Q's Wi-Fi address. The ADB alternative is `adb shell arduino-app-cli system network-mode enable` when connected directly over USB.
@@ -177,7 +181,7 @@ Stop an example by name:
 ./stop-adb.sh video
 ```
 
-For Blink or climate deployed over Wi-Fi, use `./stop-ssh.sh blink` or `./stop-ssh.sh climate`; the SSH script defaults to `commit-and-conquer.local` and accepts a `BOARD_HOST` override.
+For Blink, climate, or video deployed over Wi-Fi, use the matching `./stop-ssh.sh` command; the SSH script defaults to `commit-and-conquer.local` and accepts a `BOARD_HOST` override.
 
 With no argument, the stop script stops the climate example. It also removes the local port forwarding. To stop another App Lab app by its board path, pass that path instead:
 

@@ -27,8 +27,12 @@ case "$APP_NAME" in
     APP_DIR="/home/arduino/ArduinoApps/home-climate-monitoring-and-storage"
     APP_LABEL="Home Climate Monitoring"
     ;;
+  video)
+    APP_DIR="/home/arduino/ArduinoApps/video-generic-object-detection"
+    APP_LABEL="Detect Objects on Camera"
+    ;;
   *)
-    echo "Usage: BOARD_HOST=<board-ip-or-hostname> $0 [blink|climate]" >&2
+    echo "Usage: BOARD_HOST=<board-ip-or-hostname> $0 [blink|climate|video]" >&2
     exit 2
     ;;
 esac
