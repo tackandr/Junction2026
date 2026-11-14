@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Static concept preview for landmark-based visibility monitoring.">
+    <meta name="theme-color" content="#183b36">
+    <title>Visibility concept — VisioSense</title>
+    <link rel="stylesheet" href="assets/styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html" aria-label="VisioSense home"><img src="assets/team-logo.png" alt="Commit &amp; Conquer team badge"><span><strong>VisioSense</strong><small>Dashboard concepts</small></span></a>
+        <nav class="main-nav" aria-label="Main navigation"><a href="index.html">Overview</a><a aria-current="page" href="visibility.html">Visibility</a><a href="realtime.html">Observations</a><a class="nav-cta" href="https://github.com/tackandr/Junction2026/blob/master/visiosense/README.md">Prototype README <span aria-hidden="true">↗</span></a></nav>
+      </div>
+    </header>
+    <main class="container page-main">
+      <div class="preview-banner"><span class="preview-icon" aria-hidden="true">i</span><p><strong>Static concept preview</strong> · Every status and example below is illustrative; this page is not connected to a device.</p></div>
+      <section class="page-intro">
+        <p class="eyebrow">Dashboard concept 01</p>
+        <h1>Visibility &amp; landmarks</h1>
+        <p>A possible way to explain which known scene proxies were detected and how they map to the mock-scene demo estimate.</p>
+      </section>
+      <section class="visibility-layout" aria-label="Illustrative visibility dashboard">
+        <article class="scene-panel">
+          <div class="panel-heading"><div><span class="eyebrow">Illustrative camera view</span><h2>Fixed scene</h2></div><span class="static-tag">SIMULATED</span></div>
+          <figure class="scene-image"><img src="assets/fog-scene.jpg" alt="Generated illustration of a road and distant buildings in fog"><figcaption>Generated scene illustration · not a live image or detector result</figcaption></figure>
+          <div class="scene-caption"><span>Landmark view</span><span>Example only</span></div>
+        </article>
+        <aside class="estimate-panel">
+          <span class="eyebrow">Example classification</span>
+          <p class="example-value">500 <span>m</span></p>
+          <p class="example-caption">Illustrative demo estimate</p>
+          <div class="example-rule"><span class="state-dot state-on" aria-hidden="true"></span><div><strong>Cup tag</strong><small>Detected · nearer proxy</small></div><b>500 m</b></div>
+          <div class="example-rule"><span class="state-dot" aria-hidden="true"></span><div><strong>Bottle tag</strong><small>Not detected · farther proxy</small></div><b>—</b></div>
+          <p class="fine-print">The cup and bottle are mock-scene props. The meter values are demo categories, not calibrated visibility.</p>
+        </aside>
+      </section>
+      <section class="range-section">
+        <div class="section-heading"><p class="eyebrow">Demo mapping</p><h2>The furthest detected proxy sets the value</h2></div>
+        <div class="range-grid">
+          <article><span class="range-index">01</span><h3>No proxy tag</h3><p>Neither cup nor bottle detected</p><strong>0 m</strong></article>
+          <article><span class="range-index">02</span><h3>Cup only</h3><p>Nearer proxy detected</p><strong>500 m</strong></article>
+          <article><span class="range-index">03</span><h3>Bottle detected</h3><p>Furthest proxy; cup may or may not be detected</p><strong>1000 m</strong></article>
+        </div>
+      </section>
+      <div class="page-end-links"><a class="text-link" href="index.html#previews">← All dashboard concepts</a><a class="text-link" href="realtime.html">Next: local observations →</a></div>
+    </main>
+    <footer class="site-footer"><div class="container footer-inner"><div class="footer-brand"><img src="assets/team-logo.png" alt=""><span>VisioSense <small>by Commit &amp; Conquer</small></span></div><p>Concept preview · Frozen illustrative content</p><a href="index.html">Project overview</a></div></footer>
+  </body>
+</html>

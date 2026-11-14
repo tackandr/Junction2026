@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="VisioSense explores local visibility monitoring with an Arduino UNO Q, a fixed camera and edge AI.">
+    <meta name="theme-color" content="#183b36">
+    <title>VisioSense — Local visibility, observed</title>
+    <link rel="stylesheet" href="assets/styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html" aria-label="VisioSense home">
+          <img src="assets/team-logo.png" alt="Commit &amp; Conquer team badge">
+          <span><strong>VisioSense</strong><small>Edge AI visibility monitoring</small></span>
+        </a>
+        <nav class="main-nav" aria-label="Main navigation">
+          <a href="#approach">Approach</a>
+          <a href="#demo">Demo</a>
+          <a href="#previews">Dashboard concepts</a>
+          <a class="nav-cta" href="https://github.com/tackandr/Junction2026/blob/master/visiosense/README.md">Prototype README <span aria-hidden="true">↗</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero container">
+        <div class="hero-copy">
+          <p class="eyebrow">A local observation, made accessible</p>
+          <h1>See visibility closer to where it changes.</h1>
+          <p class="hero-lede">VisioSense explores how a fixed camera and edge AI can turn recognizable landmarks into a simple local visibility estimate.</p>
+          <div class="button-row">
+            <a class="button button-primary" href="#approach">Explore the approach <span aria-hidden="true">↓</span></a>
+            <a class="button button-secondary" href="https://github.com/tackandr/Junction2026/blob/master/visiosense/README.md">Read about the prototype <span aria-hidden="true">↗</span></a>
+          </div>
+          <p class="hero-note"><span class="status-dot" aria-hidden="true"></span> Prototype overview · This site does not show live device data</p>
+        </div>
+        <figure class="hero-visual">
+          <img src="assets/fog-scene.jpg" alt="Illustrative landscape with a road and distant landmarks partly obscured by fog">
+          <figcaption>Illustrative scene · not a live camera feed</figcaption>
+        </figure>
+      </section>
+
+      <section class="impact-band">
+        <div class="container impact-inner">
+          <p class="eyebrow">Why visibility matters</p>
+          <div class="impact-grid">
+            <article><img src="assets/airport-fog.jpg" alt="Illustration of a plane landing through fog"><span class="impact-index">01</span><h2>Aviation</h2><p>Reduced airport capacity, delays and occasional diversions.</p></article>
+            <article><img src="assets/harbor-fog.jpg" alt="Illustration of cargo ships in a foggy harbor"><span class="impact-index">02</span><h2>Marine</h2><p>Disrupted port operations and greater navigation risk.</p></article>
+            <article><img src="assets/road-fog.jpg" alt="Illustration of a driver traveling on a foggy road"><span class="impact-index">03</span><h2>Roads</h2><p>Lower speeds and greater collision risk in reduced visibility.</p></article>
+          </div>
+          <p class="fine-print">Reduced visibility can sometimes accompany poor air quality; VisioSense does not measure pollution.</p>
+        </div>
+      </section>
+
+      <section class="section container" id="approach">
+        <div class="section-heading">
+          <p class="eyebrow">The approach</p>
+          <h2>A fixed view. Local processing. A readable result.</h2>
+          <p>The prototype captures a still image about every five seconds, detects objects on the UNO Q, and records visibility alongside temperature and relative humidity.</p>
+        </div>
+        <div class="process-grid">
+          <article class="process-step"><span class="step-number">01</span><h3>Observe</h3><p>A USB camera watches a fixed scene containing recognizable proxy landmarks.</p></article>
+          <article class="process-step"><span class="step-number">02</span><h3>Detect locally</h3><p>The Arduino UNO Q runs object detection at the edge; image processing does not depend on cloud inference.</p></article>
+          <article class="process-step"><span class="step-number">03</span><h3>Estimate</h3><p>The furthest detected proxy maps to a demo value. Thermo readings are recorded as separate observations.</p></article>
+        </div>
+        <div class="hardware-line">
+          <span>Arduino UNO Q · 2 GB</span><span aria-hidden="true">/</span><span>Arduino USB Camera</span><span aria-hidden="true">/</span><span>Modulino Thermo</span>
+        </div>
+      </section>
+
+      <section class="demo-section" id="demo">
+        <div class="container demo-layout">
+          <div>
+            <p class="eyebrow">The mock-scene demonstration</p>
+            <h2>Landmark tags become simple demo values.</h2>
+            <p>The cup is the nearer proxy. The bottle is farther away, so it sets the higher demo value whenever it is detected.</p>
+            <p class="notice"><strong>Demo only.</strong> These values use miniature props and are not calibrated measurements of real-world visibility.</p>
+          </div>
+          <div class="mapping-list" aria-label="Demo mapping from detected objects to displayed values">
+            <div><span>No cup or bottle tag</span><strong>0 <small>m</small></strong></div>
+            <div><span>Cup detected, bottle not detected</span><strong>500 <small>m</small></strong></div>
+            <div><span>Bottle detected, with or without cup</span><strong>1000 <small>m</small></strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section container preview-section" id="previews">
+        <div class="section-heading section-heading-row">
+          <div><p class="eyebrow">Explore the concepts</p><h2>Two static dashboard previews</h2></div>
+          <p>These pages are visual concepts with simulated examples, not a connection to a running board.</p>
+        </div>
+        <div class="preview-grid">
+          <a class="preview-card" href="visibility.html">
+            <span class="preview-number">01 / VISIBILITY</span>
+            <h3>Visibility &amp; optics</h3>
+            <p>See how a fixed-scene observation could be organized around landmarks and a visibility estimate.</p>
+            <span class="preview-link">Open concept <span aria-hidden="true">→</span></span>
+          </a>
+          <a class="preview-card" href="realtime.html">
+            <span class="preview-number">02 / OBSERVATIONS</span>
+            <h3>Local observations</h3>
+            <p>Explore a static view of visibility, temperature and humidity records over time.</p>
+            <span class="preview-link">Open concept <span aria-hidden="true">→</span></span>
+          </a>
+        </div>
+      </section>
+
+      <section class="future-section">
+        <div class="container future-inner">
+          <div><p class="eyebrow">What comes next</p><h2>From a mock scene to a validated observation.</h2></div>
+          <p>The miniature scene demonstrates the detection idea. Field use would require landmarks at known real distances and validation against a reference visibility instrument. Forecasting remains future research, not a current feature.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div class="footer-brand"><img src="assets/team-logo.png" alt=""><span>VisioSense <small>by Commit &amp; Conquer</small></span></div>
+        <p>Project concept and prototype · Illustrative imagery, not field data</p>
+        <a href="https://github.com/tackandr/Junction2026/blob/master/visiosense/README.md">Prototype README <span aria-hidden="true">↗</span></a>
+      </div>
+    </footer>
+  </body>
+</html>
