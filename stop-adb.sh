@@ -11,6 +11,9 @@ case "$APP_NAME" in
   climate)
     APP_TARGET="/home/arduino/ArduinoApps/home-climate-monitoring-and-storage"
     ;;
+  video)
+    APP_TARGET="/home/arduino/ArduinoApps/video-generic-object-detection"
+    ;;
   *)
     APP_TARGET="$APP_NAME"
     ;;
@@ -27,5 +30,6 @@ if ! adb get-state >/dev/null 2>&1; then
 fi
 
 adb forward --remove "tcp:$LOCAL_PORT" >/dev/null 2>&1 || true
+adb forward --remove tcp:4912 >/dev/null 2>&1 || true
 adb shell arduino-app-cli app stop "$APP_TARGET"
 echo "Stopped app: $APP_TARGET"
