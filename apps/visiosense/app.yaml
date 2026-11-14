@@ -1,0 +1,7 @@
+name: VisioSense
+icon: 🌫️
+description: Capture a webcam image and detect common objects on the Arduino UNO Q.
+
+bricks:
+  - arduino:web_ui
+  - arduino:object_detection

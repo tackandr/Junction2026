@@ -2,7 +2,7 @@
 
 ## Project Structure & Documents
 
-This repository currently contains planning documents rather than application source code. `docs/ideas.md` is a structured worksheet for brainstorming, grouping, and evaluating ideas. `docs/adr/adr-template.md` is the template for recording architecture or project decisions. Keep new documentation in `docs/`, and put each decision record in `docs/adr/` so related material stays easy to find.
+`apps/visiosense/` contains the Arduino UNO Q app: `app.yaml` declares its Bricks, `python/` holds the app logic, and `assets/` contains the local web interface. `docs/ideas.md` is the project brainstorming worksheet. `docs/adr/` contains architecture decision records and their template. Keep additional Arduino apps in their own directory under `apps/`.
 
 ## Editing and Style
 
@@ -10,7 +10,7 @@ Write in Markdown with descriptive headings, short paragraphs, and actionable pr
 
 ## Build, Test, and Validation
 
-There is no configured build system, automated test suite, or formatter in the repository. For documentation-only changes, review the rendered Markdown and check links, heading hierarchy, spelling, and completed placeholders before submitting. If executable code or tooling is added later, document its setup and validation commands here.
+There is no configured build system, automated test suite, or formatter in the repository. For app changes, follow the Arduino App format and run the app on an UNO Q with its required camera and Bricks. For documentation changes, review rendered Markdown, links, headings, spelling, and placeholders. Document new setup or validation commands here when tooling is added.
 
 ## Commits and Pull Requests
 
